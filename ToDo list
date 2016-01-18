@@ -1,0 +1,27 @@
+Do to:
+Rmove table Noun -rename to Nouns and fix word updater to add only words not exsiting in the table --- recreated 1/13/2016
+Create function called userinput check...
+
+add basic functions to help with sqlite creation
+    This includes 
+        Table creation ---1/13/2016
+        Table removale --1/13/2016 
+        Table calling what was this? Was it print tables?
+        Table editing ( only can add columns with built in functions of sqlite have to make a work around for deleteing colums.... back up-copy all colums that you want-delete old table-rename to old table name.) 
+        row editing
+        row creation
+        Search (through the rows for data?)
+        Call_rows (rename as search_rows???)(looking if it existis?
+        
+        
+Create funtion for user input 
+    Needs to have:
+        quit function
+        looping ablitlies.... could work if all cmds would call this funtion at the end of their work... allows for next comand to work.
+        
+Create Basic String/List Analizer
+    Neededs to do:
+        analize sentance structer...
+        reconize key words/action EX: run, pause, resume, quit.... ect ect
+        
+This is all for basic basic skeleton fram work for Corona
