@@ -1,0 +1,5 @@
+Have done:
+    Created basic sqlite editor--- needs a few more functions
+    Looping user interface with quit function built into it
+    string to list function 
+    
