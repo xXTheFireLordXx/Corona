@@ -1,0 +1,23 @@
+import sqlite3
+conn = sqlite3.connect('database.db')
+c = conn.cursor()
+def updateDb(file_name,table_name):
+    file = open(file_name, 'r')
+    for name in file: 
+        fixed_name = name.rstrip()
+        c.execute("select word from ? where word=?", (table_name,fixed_name,))
+        data = c.fetchone()
+        if data == None:
+            print ('not found')
+            c.execute('insert into %s values("%s")'%table_name %fixed_name)
+            print('Added word named %s' %name)
+        else:
+            print ('found')
+def create_table():
+    new_input = input("table name? ")
+    cmd = '''CREATE TABLE IF NOT EXISTS %s (word text, description text) ''' % (new_input)
+    print(cmd)
+    c.execute(cmd)
+    print("Created Table called %s" % (new_input))
+
+create_table()
