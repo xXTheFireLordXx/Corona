@@ -6,9 +6,16 @@ import time
 conn = sqlite3.connect('database.db')
 c = conn.cursor()
                             ### END OF SQLITE SETUP ###
-loop_toggle = True    
-#user_input = input(":")
-        #user input starting resquest create this into user request function
+        
+class Data_object(object):
+    def __init__(self,name,prameters_amount,prameters,tag,layout):
+        self.name  = name
+        self.prameters_amount = prameters_amount
+        self.prameters = prameters
+        self.tag =tag
+        self.layout =layout
+    def __repr__(self):
+        return("This Data object is %s and has %s prameters, prameters are %s. It has this tag %s and this lay out is %s" %(self.name,str(self.prameters_amount),str(self.prameters),self.tag,self.layout))
 def User_input(text):
     user_input = input(text)
     print(user_input)
@@ -17,10 +24,8 @@ def User_input(text):
 def input_check(the_input,text):
     if str(the_input) == text:
         return True
-        #print("True")
     else:
         return False
-        #print("Returned false")
 
 def delete_table():
     new_input = input("Name of Table? ")
@@ -35,7 +40,6 @@ def create_table():
             sqlite_column_data += input("Column %d data "%i)
         else:
             sqlite_column_data += input("Column %d data "%i) + ' , '
-    #column_data = input("Column data? ")
     print(sqlite_column_data)
     #print(column_data)
     cmd = "CREATE TABLE IF NOT EXISTS %s (%s) " % (new_input,sqlite_column_data)
@@ -77,17 +81,32 @@ def print_rows():
     for row in c.execute(cmd):
         print(row)
         
-def test_data(row_name,db_name):
-    for row in c.execute("select word from %s where word='%s'" %(db_name,row_name)):
-        return True
-        print("found")
-
-def call_data(table_name,row_name,search_cloumn,column_name):
+def test_data(db_name,row_name,tag):
+    #print(column_filter_name)
+    c.execute("select * from %s" %(db_name,))
+    all_rows = c.fetchall()
+    #print(all_rows)
+    if row_name != '':    
+        if tag:
+            for row in all_rows:
+                if str(row[3]) == tag and str(row[0]) == row_name:
+                    print("found in filter",tag)
+                    return True
+                    
+        elif not tag:
+            for row in all_rows:
+                print("found with out filter")
+                return True
+                print("found")
+        else:
+            return(False)
+    
+def call_data_from_tag(table_name,row_name,search_cloumn,column_name):
     c.execute("select * from %s" %(table_name))
     table = c.fetchall()
-    for column in table:
-        if str(column[3]) == column_name and str(column[search_cloumn]) == row_name:
-            return(column)
+    for row in table:
+        if str(row[3]) == column_name and str(row[search_cloumn]) == row_name:
+            return(row)
             '''print("found row with data:",row[0])
             print("Prams need are: ",row[1])
             print("Prams are: ",row[2])
@@ -96,23 +115,54 @@ def call_data(table_name,row_name,search_cloumn,column_name):
 
 def analize(Input):
     string_list = Input.split()
-    print(string_list)
+    #print(string_list)
     action = []
-    pram = []
+    needed_pram = []
     for word in string_list:
+        print(word)
         if word.lower() == 'corona':
             string_list.remove(word)
-        elif test_data(word.lower(),'actions'):
-            got_row = call_data('actions',word.lower(),0,'action')
-            for item in got_row:
+        
+        elif test_data('actions',word.lower(),'action'):
+            got_ = call_data_from_tag('actions',word.lower(),0,'action')
+            print(got_)
+            for item in got_:
                 action.append(item)
-            for number in range(action[1]):
-                print("this is action[2]",str(action[2]))
-                row =call_data('actions',str(action[2]),3,"object")
-                print(row)
+            print(action)
+        elif test_data('actions',word.lower(),str(action[2])):
+            row =call_data_from_tag('actions',word.lower(),0,"object")
+            pram_search
+            print(row)
 
+def test_analize(Input):
+    string_list = Input.split()
+    #print(string_list)
+    data_dict = {}
+    prams_search = {}
+    for word in string_list:
+        print(word)
+        if word.lower() == 'corona':
+            string_list.remove(word)
+        
+        elif test_data('actions',word.lower(),'action'):
+            got_ = call_data_from_tag('actions',word.lower(),0,'action')
             
-            
+            action = Data_object(got_[0],got_[1],got_[2],got_[3],got_[4])
+            data_dict["action"] = action
+            print(action)
+            search_objects = got_.split()
+            for number in range(int(got_[1])):
+                prams_search[number] = search_objects[number-1]
+        elif test_data('actions',word.lower(),data_dict["action"].prameters):
+            row =call_data_from_tag('actions',word.lower(),0,"object")
+            data_dict[data_dict["action"].prameters] = Data_object(row[0],row[1],row[2],row[3],row[4],)
+            print(data_dict[data_dict["action"].prameters])
+
+def pram_search(row):
+    
+    for item in prams_search:
+        if test_data('actions',,)
+    
 def user_input_cmd(Input):
     the_input = Input
 
@@ -155,7 +205,7 @@ def user_input_cmd(Input):
     elif input_check(the_input,"get row"):
         call_data("hat","Nouns")
     else:
-        analize(the_input)
+        test_analize(the_input)
         
 while True:
     the_input = input(":")
